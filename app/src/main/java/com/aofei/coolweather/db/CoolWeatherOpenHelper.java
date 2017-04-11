@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
-    private static final String DB_NAME = "coolweatehr.db";
 
     /***
      * 创建省
@@ -30,8 +29,8 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
     private static final String CREATE_COUNTY = "create table County(id integer primary key autoincrement,county_name text," +
             "county_code text,city_id integer)";
 
-    public CoolWeatherOpenHelper(Context context, int version) {
-        super(context, DB_NAME, null, version);
+    public CoolWeatherOpenHelper(Context context, String dbname,int version) {
+        super(context, dbname, null, version);
     }
 
     @Override
