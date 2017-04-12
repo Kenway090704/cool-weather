@@ -140,9 +140,9 @@ public class Utility {
      * @param weatherDesp
      * @param publishTime
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
+
     private static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -153,7 +153,7 @@ public class Utility {
         editor.putString("temp2", temp2);
         editor.putString("weather_desp", weatherDesp);
         editor.putString("publish_time", publishTime);
-        editor.putString("current_date", sdf.format(new Date()));
+        editor.putString("current_date", new Date()+"");
         editor.commit();
     }
 }
