@@ -1,5 +1,6 @@
 package com.aofei.coolweather.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -7,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,9 +22,17 @@ import com.aofei.coolweather.util.Utility;
  * Email : xiaokai090704@126.com
  */
 
-public class WeatherActivity extends AppCompatActivity {
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener {
     private LinearLayout weatherInfoLayout;
 
+    /**
+     * 切换城市Button
+     */
+    private Button switchCity;
+    /**
+     *
+     */
+    private Button refreshWeather;
     /**
      * 用于显示城市名
      */
@@ -51,6 +61,7 @@ public class WeatherActivity extends AppCompatActivity {
      */
     private TextView currentDateText;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,12 +69,18 @@ public class WeatherActivity extends AppCompatActivity {
         setContentView(R.layout.weather_layout);
         //初始化各控件
         weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
+        switchCity = (Button) findViewById(R.id.switch_city);
+        refreshWeather = (Button) findViewById(R.id.refresh_weather);
         cityNameText = (TextView) findViewById(R.id.city_name);
         publishText = (TextView) findViewById(R.id.publish_text);
         temp1Text = (TextView) findViewById(R.id.temp1);
         temp2Text = (TextView) findViewById(R.id.temp2);
-        weatherDespText= (TextView) findViewById(R.id.weatehr_desp);
+        weatherDespText = (TextView) findViewById(R.id.weatehr_desp);
         currentDateText = (TextView) findViewById(R.id.current_date);
+
+
+        switchCity.setOnClickListener(this);
+        refreshWeather.setOnClickListener(this);
         String countyCode = getIntent().getStringExtra("county_code");
         if (!TextUtils.isEmpty(countyCode)) {
             //有县级代号时就去查询天气
@@ -74,6 +91,7 @@ public class WeatherActivity extends AppCompatActivity {
 
         } else {
             //没有县级代号就直接显示本地天气
+            showWeather();
         }
     }
 
@@ -150,5 +168,27 @@ public class WeatherActivity extends AppCompatActivity {
         currentDateText.setText(prefs.getString("current_date", ""));
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.switch_city:
+                Intent intent = new Intent(this, ChooseAreaActivity.class);
+                intent.putExtra("from_weather_activity", true);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.refresh_weather:
+                publishText.setText("同步中");
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                String weatherCode = prefs.getString("weather_code", "");
+                if (!TextUtils.isEmpty(weatherCode)) {
+                    queryWeatherInfo(weatherCode);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
